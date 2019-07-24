@@ -48,11 +48,79 @@ const mainRoutes = {
   }
 };
 
+// 接口测试平台需要的路由(无需嵌套上左右整体布局)
+const apiTestRoutes = [
+  // { path: '/404', component: _import('common/404'), name: '404', meta: { title: '404未找到' } },
+  // { path: '/login', component: _import('common/login'), name: 'login', meta: { title: '登录' } }
+  { path: '/projectView/project=:project_id',
+    component: _import('project/project-view'),
+    name: 'projectView',
+    leaf: true,
+    projectShow: true,
+    children: [
+      {path: '/projectInfo/project=:project_id', component: _import('project/project-info'), name: '项目概况', leaf: true}
+    ]
+  }
+  // {
+  //   path: '/projectView/project=:project_id',
+  //   component: _import('project/project-view'),
+  //   name: '项目',
+  //   hidden: true,
+  //   projectShow: true,
+  //   children: [
+  //     {   path: '/ProjectInfo/project=:project_id', component: _import('project/project-info'), name: '项目概况', leaf: true}
+      // {   path: '/GlobalHost/project=:project_id', component: globalHost, name: 'Host配置', leaf: true},
+      // {   path: '/api/project=:project_id',
+      //   component: API,
+      //   name: 'API接口',
+      //   leaf: true,
+      //   child: true,
+      //   children: [
+      //     {   path: '/apiList/project=:project_id', component: ApiList, name: '接口列表'},
+      //     {   path: '/apiList/project=:project_id/first=:firstGroup', component: ApiListGroup, name: '分组接口列表'},
+      //     {   path: '/fastTest/project=:project_id', component: FestTest, name: '快速测试'},
+      //     {   path: '/addApi/project=:project_id', component: addApi, name: '新增接口'},
+      //     {   path: '/detail/project=:project_id/api=:api_id',
+      //       component: detail,
+      //       name: '接口',
+      //       children: [
+      //         { path: '/apiInfo/project=:project_id/api=:api_id', component: ApiInfo, name: '基础信息'},
+      //         { path: '/testApi/project=:project_id/api=:api_id', component: testApi, name: '测试'},
+      //         { path: '/apiDynamic/project=:project_id/api=:api_id', component: ApiDynamic, name: '历史'},
+      //       ]
+      //     },
+      //     { path: '/updateApi/project=:project_id/api=:api_id', component: UpdateApi, name: '修改'},
+      //   ]},
+      // {   path: '/automationTest/project=:project_id',
+      //   component: AutomationTest,
+      //   name: '自动化测试',
+      //   leaf: true,
+      //   child: true,
+      //   children: [
+      //     {   path: '/caseList/project=:project_id', component: CaseList, name: '用例列表'},
+      //     {   path: '/caseList/project=:project_id/first=:firstGroup', component: CaseListGroup, name: '分组用例列表'},
+      //     {   path: '/caseApiList/project=:project_id/case=:case_id', component: CaseApiList, name: '用例接口列表'},
+      //     {   path: '/addCaseApi/project=:project_id/case=:case_id', component: AddCaseApi, name: '添加新接口'},
+      //     {   path: '/updateCaseApi/project=:project_id/case=:case_id/api=:api_id', component: UpdateCaseApi, name: '修改接口'},
+      //     {   path: '/testReport/project=:project_id', component: TestReport, name: '测试报告'},
+      //   ]
+      // },
+      // {   path: '/projectMember/project=:project_id', component: ProjectMember, name: '成员管理', leaf: true},
+      // {   path: '/projectDynamic/project=:project_id', component: ProjectDynamic, name: '项目动态', leaf: true},
+      // {   path: '/projectReport/project=:project_id', component: ProjectReport, name: '自动化测试报告', leaf: true},
+  //   ]
+  // }
+
+
+
+];
+
+
 const router = new Router({
   mode: 'hash',
   scrollBehavior: () => ({ y: 0 }),
   isAddDynamicMenuRoutes: false, // 是否已经添加动态(菜单)路由
-  routes: globalRoutes.concat(mainRoutes)
+  routes: globalRoutes.concat(mainRoutes).concat(apiTestRoutes)
 });
 
 router.beforeEach((to, from, next) => {

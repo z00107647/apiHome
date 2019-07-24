@@ -7,17 +7,35 @@
       <el-form-item label="项目名称" prop="projectName">
         <el-input v-model="dataForm.projectName" placeholder="项目名称"></el-input>
       </el-form-item>
-      <el-form-item label="类型" prop="projectType">
-        <el-input v-model="dataForm.projectType" placeholder="类型"></el-input>
-      </el-form-item>
-      <el-form-item label="版本号" prop="projectVersion">
-        <el-input v-model="dataForm.projectVersion" placeholder="版本号"></el-input>
-      </el-form-item>
+<!--      <el-form-item label="类型" prop="projectType">-->
+<!--        <el-input v-model="dataForm.projectType" placeholder="类型"></el-input>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="版本号" prop="projectVersion">-->
+<!--        <el-input v-model="dataForm.projectVersion" placeholder="版本号"></el-input>-->
+<!--      </el-form-item>-->
+
+      <el-row :gutter="24">
+        <el-col :span="12">
+          <el-form-item label="类型" prop='projectType'>
+            <el-select v-model="dataForm.projectType" placeholder="请选择">
+              <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="版本号" prop='projectVersion'>
+            <el-input v-model="dataForm.projectVersion" auto-complete="off"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+
       <el-form-item label="负责人" prop="operator">
         <el-input v-model="dataForm.operator" placeholder="负责人"></el-input>
       </el-form-item>
       <el-form-item label="备注" prop="remark">
-        <el-input type="textarea" :rows="3" v-model="dataForm.remark" placeholder="备注"></el-input>
+        <el-input type="textarea" :rows="6" v-model="dataForm.remark" placeholder="备注"></el-input>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
@@ -50,7 +68,8 @@
           projectVersion: [
             { required: true, message: '项目版本号不能为空', trigger: 'blur' }
           ]
-        }
+        },
+        options: [{ label: "Web", value: "Web"}, { label: "App", value: "App"}]
       }
     },
     methods: {

@@ -2,7 +2,7 @@
   <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.projectName" placeholder="参数名" clearable></el-input>
+        <el-input v-model="dataForm.projectName" placeholder="项目名" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
@@ -34,6 +34,14 @@
         header-align="center"
         align="center"
         label="项目名称">
+        <template slot-scope="scope">
+          <el-icon name="name"></el-icon>
+<!--          scope.row.status-->
+          <router-link v-if="true" :to="{ name: 'projectView', params: {project_id: scope.row.projectId}}" style='text-decoration: none;color: #000000;'>
+            {{ scope.row.projectName }}
+          </router-link>
+<!--          {{ !scope.row.status?scope.row.projectName:""}}-->
+        </template>
       </el-table-column>
       <el-table-column
         prop="projectType"
@@ -60,11 +68,11 @@
         label="备注">
       </el-table-column>
       <el-table-column
-        prop="gmtCreate"
+        prop="gmtModify"
         header-align="center"
         align="center"
         width="180"
-        label="创建时间">
+        label="更新时间">
       </el-table-column>
       <el-table-column
         fixed="right"
