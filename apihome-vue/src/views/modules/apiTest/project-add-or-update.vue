@@ -85,11 +85,11 @@
               params: this.$http.adornParams()
             }).then(({data}) => {
               if (data && data.code === 0) {
-                this.dataForm.projectName = data.config.projectName;
-                this.dataForm.projectType = data.config.projectType;
-                this.dataForm.projectVersion = data.config.projectVersion;
-                this.dataForm.operator = data.config.operator;
-                this.dataForm.remark = data.config.remark
+                this.dataForm.projectName = data.project.projectName;
+                this.dataForm.projectType = data.project.projectType;
+                this.dataForm.projectVersion = data.project.projectVersion;
+                this.dataForm.operator = data.project.operator;
+                this.dataForm.remark = data.project.remark
               }
             })
           }

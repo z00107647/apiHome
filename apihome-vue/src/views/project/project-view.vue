@@ -1,187 +1,135 @@
 <template>
-  <el-row class="container">
-    <el-col :span="24" class="header">
-      <el-col :span="10" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
-        <router-link :to="{ name: 'home'}" style='text-decoration: none;color: #FFFFFF;'>{{collapsed?'':sysName}}</router-link>
+  <div class="main">
+    <el-row :span="24">
+      <el-col :span="6" class='inline'>
+        <el-card class="box-card">
+          <h1>{{type}}</h1>
+          <div>项目类型</div>
+        </el-card>
       </el-col>
-      <!--      <el-col :span="4" class="userinfo">-->
-      <!--        <el-dropdown trigger="hover">-->
-      <!--          <span class="el-dropdown-link userinfo-inner"><img src="../assets/userphoto.jpg"/> {{sysUserName}}</span>-->
-      <!--          <el-dropdown-menu slot="dropdown">-->
-      <!--            &lt;!&ndash;<el-dropdown-item>我的消息</el-dropdown-item>&ndash;&gt;-->
-      <!--            &lt;!&ndash;<el-dropdown-item>设置</el-dropdown-item>&ndash;&gt;-->
-      <!--            <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>-->
-      <!--          </el-dropdown-menu>-->
-      <!--        </el-dropdown>-->
-      <!--      </el-col>-->
-    </el-col>
-        <el-col :span="24">
-          <template :index='project_id'>
-            <el-menu :default-active="$route.path" class="el-menu-vertical-demo" mode="horizontal" @select="handleselect"
-                     unique-opened v-show="!collapsed">
-              <template v-for="item in $router.options.routes" v-if="item.projectShow">
-                <template v-for="(items,index) in item.children">
-                  <el-menu-item :index="items.path" v-if="items.leaf" :key="items.path">
-                    <template v-if="!items.child">
-                      <router-link :to="{ name: items.name, params: {id: project_id}}" style='text-decoration: none;color: #000000;'>
-                        <div>
-                          {{items.name }}
-                        </div>
-                      </router-link>
-                    </template>
-                    <template v-if="items.child">
-                      <router-link :to="{ name: items.children[0].name, params: {id: project_id}}" style='text-decoration: none;color: #000000;'>
-                        <div>
-                          {{items.name }}
-                        </div>
-                      </router-link>
-                    </template>
-                  </el-menu-item>
-                  <el-submenu :index="index+''" v-if="!items.leaf">
-                    <template slot="title">{{items.name}}</template>
-                    <el-menu-item v-for="child in items.children" :key="child.path" :index="child.path">
-                      {{child.name}}
-                    </el-menu-item>
-                  </el-submenu>
-                </template>
-              </template>
-            </el-menu>
-          </template>
-          <strong class="title">{{$route.name}}</strong>
-        </el-col>
-        <el-col :span="24">
-          <transition name="fade" mode="out-in">
-            <router-view></router-view>
-          </transition>
-        </el-col>
-  </el-row>
-
-
+      <el-col :span="6" class='inline'>
+        <el-card class="box-card">
+          <h1>{{version}}</h1>
+          <div>版本</div>
+        </el-card>
+      </el-col>
+      <el-col :span="6" class='inline'>
+        <el-card class="box-card">
+          <h1>{{updateDate}}</h1>
+          <div>最近更新时间</div>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-row :span="24">
+      <el-col :span="6" class='inline'>
+        <el-card class="box-card">
+          <router-link :to="{name: '接口列表'}" style='text-decoration: none;color: #000000;'><h1>{{apiCount}}个接口</h1></router-link>
+          <div>接口数量</div>
+        </el-card>
+      </el-col>
+      <el-col :span="6" class='inline'>
+        <el-card class="box-card">
+          <h1>{{statusCount}}条状态码</h1>
+          <div>通用状态码</div>
+        </el-card>
+      </el-col>
+      <el-col :span="6" class='inline'>
+        <el-card class="box-card">
+          <router-link :to="{name: '项目动态'}" style='text-decoration: none;color: #000000;'><h1>{{dynamicCount}}条动态</h1></router-link>
+          <div>项目三天内动态</div>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-row :span="24">
+      <el-col :span="6" class='inline'>
+        <el-card class="box-card">
+          <router-link :to="{name: '成员管理'}" style='text-decoration: none;color: #000000;'><h1><img src="~@/assets/img/member.png" class="member">{{memberCount}}人</h1></router-link>
+          <div>项目组成员</div>
+        </el-card>
+      </el-col>
+      <el-col :span="6" class='inline'>
+        <el-card class="box-card">
+          <router-link :to="{name: '用例列表'}" style='text-decoration: none;color: #000000;'><h1>自动化测试</h1></router-link>
+          <div>自由测试接口并生成测试报告</div>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-row :span="24">
+      <el-col :span="6" class='inline'>
+        <el-card class="box-card">
+          <h1>{{createDate}}</h1>
+          <div>创建时间</div>
+        </el-card>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 
 <script>
-
   export default {
     data() {
       return {
-        tabPosition: 'top',
-        project_id: '',
-        sysName: '接口测试平台',
-        collapsed: false,
-        sysUserName: '',
-        sysUserAvatar: '',
+        type: '',
+        version: '',
+        updateDate: '',
+        apiCount: 0,
+        statusCount: 0,
+        dynamicCount: 0,
+        memberCount: 0,
+        createDate: '',
       }
     },
     methods: {
-      handleselect: function (a, b) {
-      },
-      onSubmit() {
-        console.log('submit!');
-      },
-      //退出登录
-      logout: function () {
-        let _this = this;
-        this.$confirm('确认退出吗?', '提示', {
-          //type: 'warning'
-        }).then(() => {
-          sessionStorage.removeItem('token');
-          _this.$router.push('/login');
-        }).catch(() => {
-
+      getProjectView() {
+        var self = this;
+        this.$http({
+          url: this.$http.adornUrl(`/apiTest/project/view/${this.$route.params.project_id}`),
+          method: 'get',
+          params: this.$http.adornParams()
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            self.type = data.project.projectType;
+            self.version = data.project.projectVersion;
+            self.updateDate = data.project.gmtModify;
+            // 需要跨库查询得到
+            self.apiCount = 0;
+            self.dynamicCount = 0;
+            self.memberCount = 0;
+            self.createDate = data.project.gmtCreate;
+          } else {
+            this.$message.error({
+              message: data.msg,
+              center: true,
+            });
+          }
         });
-      },
-      showMenu(i, status) {
-        this.$refs.menuCollapsed.getElementsByClassName('submenu-hook-' + i)[0].style.display = status ? 'block' : 'none';
-      },
+      }
     },
     mounted() {
-      let user = sessionStorage.getItem('username');
-      if (user) {
-        name = JSON.parse(user);
-        this.sysUserName = name || '';
-//				this.sysUserAvatar = '../assets/user.png';
-      }
-      this.project_id = this.$route.params.project_id
+      this.getProjectView()
     }
   }
-
 </script>
 
-<style scoped lang="scss">
-  /*对@import波浪线代表了alias引用*/
-  /*@import '~scss_vars';*/
-
-  .container {
-    position: absolute;
-    top: 0px;
-    bottom: 0px;
+<style lang="scss" scoped>
+  .box-card {
     width: 100%;
-    .header {
-      height: 60px;
-      line-height: 60px;
-      background: #20a0ff;
-      color:#fff;
-      .userinfo {
-        text-align: right;
-        padding-right: 35px;
-        float: right;
-        .userinfo-inner {
-          cursor: pointer;
-          color:#fff;
-          img {
-            width: 40px;
-            height: 40px;
-            border-radius: 20px;
-            margin: 10px 0px 10px 10px;
-            float: right;
-          }
-        }
-      }
-      .logo {
-        //width:230px;
-        height:60px;
-        font-size: 22px;
-        padding-left:20px;
-        padding-right:20px;
-        border-color: rgba(238,241,146,0.3);
-        border-right-width: 1px;
-        border-right-style: solid;
-        img {
-          width: 40px;
-          float: left;
-          margin: 10px 10px 10px 18px;
-        }
-        .txt {
-          color:#fff;
-        }
-      }
-      .logo-width{
-        width:230px;
-      }
-      .logo-collapse-width{
-        width:60px
-      }
-      .tools{
-        padding: 0px 23px;
-        width:14px;
-        height: 60px;
-        line-height: 60px;
-        cursor: pointer;
-      }
-    }
-    .title {
-      width: 200px;
-      float: left;
-      color: #475669;
-      font-size: 25px;
-      margin: 15px;
-      margin-left: 35px;
-      margin-bottom: 0px;
-      font-family: PingFang SC;
-    }
+    height: 100%;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .member {
+    width: 7%;
+  }
+  .main {
+    margin: 35px;
+    margin-top: 10px;
+  }
+  .inline {
+    margin: 10px;
+    margin-left: 0px;
+    margin-right: 20px;
   }
 </style>
-
-
-
-

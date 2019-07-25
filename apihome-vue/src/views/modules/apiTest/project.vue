@@ -37,7 +37,7 @@
         <template slot-scope="scope">
           <el-icon name="name"></el-icon>
 <!--          scope.row.status-->
-          <router-link v-if="true" :to="{ name: 'projectView', params: {project_id: scope.row.projectId}}" style='text-decoration: none;color: #000000;'>
+          <router-link v-if="true" :to="{ name: 'projectFront', params: {project_id: scope.row.projectId}}" style='text-decoration: none;color: #000000;'>
             {{ scope.row.projectName }}
           </router-link>
 <!--          {{ !scope.row.status?scope.row.projectName:""}}-->

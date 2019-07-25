@@ -23,7 +23,7 @@ public class ApiTestProjectController {
     private ApiTestProjectService apiTestProjectService;
 
     /**
-     * 所有配置列表
+     * 所有项目列表
      */
     @GetMapping("/list")
     @RequiresPermissions("apiTest:project:list")
@@ -34,20 +34,20 @@ public class ApiTestProjectController {
     }
 
     /**
-     * 配置信息
+     * 项目信息
      */
     @GetMapping("/info/{id}")
     @RequiresPermissions("apiTest:project:info")
     public R info(@PathVariable("id") Long id){
         ApiTestProjectEntity project = apiTestProjectService.getById(id);
 
-        return R.ok().put("config", project);
+        return R.ok().put("project", project);
     }
 
     /**
-     * 保存配置
+     * 保存项目
      */
-    @SysLog("保存配置")
+    @SysLog("保存项目信息")
     @PostMapping("/save")
     @RequiresPermissions("apiTest:project:save")
     public R save(@RequestBody ApiTestProjectEntity project){
@@ -59,9 +59,9 @@ public class ApiTestProjectController {
     }
 
     /**
-     * 修改配置
+     * 修改项目
      */
-    @SysLog("修改配置")
+    @SysLog("修改项目信息")
     @PostMapping("/update")
     @RequiresPermissions("apiTest:project:update")
     public R update(@RequestBody ApiTestProjectEntity project){
@@ -73,15 +73,26 @@ public class ApiTestProjectController {
     }
 
     /**
-     * 删除配置
+     * 删除项目
      */
-    @SysLog("删除配置")
+    @SysLog("删除项目信息")
     @PostMapping("/delete")
     @RequiresPermissions("apiTest:project:delete")
     public R delete(@RequestBody Long[] ids){
         apiTestProjectService.deleteBatch(ids);
 
         return R.ok();
+    }
+
+    /**
+     * 项目全景，不仅仅包含项目信息，还包含其他表的联查数据
+     */
+    @GetMapping("/view/{id}")
+    @RequiresPermissions("apiTest:project:view")
+    public R view(@PathVariable("id") Long id){
+        ApiTestProjectEntity project = apiTestProjectService.getById(id);
+
+        return R.ok().put("project", project);
     }
 
 

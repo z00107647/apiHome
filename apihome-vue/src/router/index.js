@@ -52,13 +52,13 @@ const mainRoutes = {
 const apiTestRoutes = [
   // { path: '/404', component: _import('common/404'), name: '404', meta: { title: '404未找到' } },
   // { path: '/login', component: _import('common/login'), name: 'login', meta: { title: '登录' } }
-  { path: '/projectView/project=:project_id',
-    component: _import('project/project-view'),
-    name: 'projectView',
+  { path: '/projectFront/project=:project_id',
+    component: _import('project/project-front'),
+    name: 'projectFront',
     leaf: true,
     projectShow: true,
     children: [
-      {path: '/projectInfo/project=:project_id', component: _import('project/project-info'), name: '项目概况', leaf: true}
+      {path: '/projectView/project=:project_id', component: _import('project/project-view'), name: '项目概况', leaf: true}
     ]
   }
   // {
