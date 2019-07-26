@@ -16,12 +16,12 @@ public interface ApiTestProjectService extends IService<ApiTestProjectEntity> {
     PageUtils queryPage(Map<String, Object> params);
 
     /**
-     * 保存配置信息
+     * 保存信息
      */
     void saveProject(ApiTestProjectEntity apiTestProject);
 
     /**
-     * 更新配置信息
+     * 更新信息
      */
     void update(ApiTestProjectEntity apiTestProject);
 
@@ -31,7 +31,7 @@ public interface ApiTestProjectService extends IService<ApiTestProjectEntity> {
 //    void updateValueByKey(String key, String value);
 
     /**
-     * 删除配置信息
+     * 删除信息
      */
     void deleteBatch(Long[] ids);
 

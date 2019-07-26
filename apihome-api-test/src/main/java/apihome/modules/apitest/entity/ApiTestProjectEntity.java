@@ -53,12 +53,12 @@ public class ApiTestProjectEntity {
     private String remark;
 
     /**
-     * 提交用例的人
+     * 提交的人
      */
     private String createBy;
 
     /**
-     * 修改用例的人
+     * 修改的人
      */
     private String modifyBy;
 

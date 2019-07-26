@@ -94,14 +94,14 @@
         this.$refs.menuCollapsed.getElementsByClassName('submenu-hook-' + i)[0].style.display = status ? 'block' : 'none';
       },
     },
-    mounted() {
+    created() {
       let user = sessionStorage.getItem('username');
       if (user) {
         name = JSON.parse(user);
         this.sysUserName = name || '';
 //				this.sysUserAvatar = '../assets/user.png';
       }
-      this.project_id = this.$route.params.project_id
+      this.project_id = this.$route.params.project_id;
     }
   }
 

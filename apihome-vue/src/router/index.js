@@ -58,7 +58,8 @@ const apiTestRoutes = [
     leaf: true,
     projectShow: true,
     children: [
-      {path: '/projectView/project=:project_id', component: _import('project/project-view'), name: '项目概况', leaf: true}
+      {path: '/projectView/project=:project_id', component: _import('project/project-view'), name: '项目概况', leaf: true},
+      {path: '/GlobalHost/project=:project_id', component: _import('project/global/host'), name: 'Host配置', leaf: true}
     ]
   }
   // {
