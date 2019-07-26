@@ -35,6 +35,7 @@ public class TestHostServiceImpl extends ServiceImpl<TestHostDao, TestHostEntity
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void saveHost(TestHostEntity testHostEntity) {
         this.save(testHostEntity);
     }

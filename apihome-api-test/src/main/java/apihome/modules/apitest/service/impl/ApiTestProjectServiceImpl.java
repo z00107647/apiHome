@@ -36,6 +36,7 @@ public class ApiTestProjectServiceImpl extends ServiceImpl<ApiTestProjectDao, Ap
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void saveProject(ApiTestProjectEntity apiTestProject) {
         this.save(apiTestProject);
     }

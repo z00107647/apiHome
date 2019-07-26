@@ -58,62 +58,26 @@ const apiTestRoutes = [
     leaf: true,
     projectShow: true,
     children: [
-      {path: '/projectView/project=:project_id', component: _import('project/project-view'), name: '项目概况', leaf: true},
-      {path: '/GlobalHost/project=:project_id', component: _import('project/global/host'), name: 'Host配置', leaf: true}
+      { path: '/projectView/project=:project_id', component: _import('project/project-view'), name: '项目概况', leaf: true},
+      { path: '/GlobalHost/project=:project_id', component: _import('project/global/host'), name: 'Host配置', leaf: true},
+      { path: '/api/project=:project_id', component: _import('project/api/api'), name: 'API接口', leaf: true, child: true,
+        children: [
+          { path: '/apiList/project=:project_id', component: _import('project/api/api-list'), name: '接口列表'},
+          { path: '/apiList/project=:project_id/first=:firstGroup', component: _import('project/api/api-list-group'), name: '分组接口列表'},
+          { path: '/fastTest/project=:project_id', component: _import('project/api/fast-test'), name: '快速测试'},
+          { path: '/addApi/project=:project_id', component: _import('project/api/api-add'), name: '新增接口'},
+          { path: '/updateApi/project=:project_id/api=:api_id', component: _import('project/api/api-update'), name: '修改'},
+          { path: '/detail/project=:project_id/api=:api_id', component: _import('project/api/api-form'), name: '接口',
+            children: [
+              { path: '/apiInfo/project=:project_id/api=:api_id', component: _import('project/api/api-info'), name: '基础信息'},
+              { path: '/testApi/project=:project_id/api=:api_id', component: _import('project/api/test-api'), name: '测试'},
+              { path: '/apiHistory/project=:project_id/api=:api_id', component: _import('project/api/api-history'), name: '历史'},
+            ]
+          }
+        ]
+      }
     ]
   }
-  // {
-  //   path: '/projectView/project=:project_id',
-  //   component: _import('project/project-view'),
-  //   name: '项目',
-  //   hidden: true,
-  //   projectShow: true,
-  //   children: [
-  //     {   path: '/ProjectInfo/project=:project_id', component: _import('project/project-info'), name: '项目概况', leaf: true}
-      // {   path: '/GlobalHost/project=:project_id', component: globalHost, name: 'Host配置', leaf: true},
-      // {   path: '/api/project=:project_id',
-      //   component: API,
-      //   name: 'API接口',
-      //   leaf: true,
-      //   child: true,
-      //   children: [
-      //     {   path: '/apiList/project=:project_id', component: ApiList, name: '接口列表'},
-      //     {   path: '/apiList/project=:project_id/first=:firstGroup', component: ApiListGroup, name: '分组接口列表'},
-      //     {   path: '/fastTest/project=:project_id', component: FestTest, name: '快速测试'},
-      //     {   path: '/addApi/project=:project_id', component: addApi, name: '新增接口'},
-      //     {   path: '/detail/project=:project_id/api=:api_id',
-      //       component: detail,
-      //       name: '接口',
-      //       children: [
-      //         { path: '/apiInfo/project=:project_id/api=:api_id', component: ApiInfo, name: '基础信息'},
-      //         { path: '/testApi/project=:project_id/api=:api_id', component: testApi, name: '测试'},
-      //         { path: '/apiDynamic/project=:project_id/api=:api_id', component: ApiDynamic, name: '历史'},
-      //       ]
-      //     },
-      //     { path: '/updateApi/project=:project_id/api=:api_id', component: UpdateApi, name: '修改'},
-      //   ]},
-      // {   path: '/automationTest/project=:project_id',
-      //   component: AutomationTest,
-      //   name: '自动化测试',
-      //   leaf: true,
-      //   child: true,
-      //   children: [
-      //     {   path: '/caseList/project=:project_id', component: CaseList, name: '用例列表'},
-      //     {   path: '/caseList/project=:project_id/first=:firstGroup', component: CaseListGroup, name: '分组用例列表'},
-      //     {   path: '/caseApiList/project=:project_id/case=:case_id', component: CaseApiList, name: '用例接口列表'},
-      //     {   path: '/addCaseApi/project=:project_id/case=:case_id', component: AddCaseApi, name: '添加新接口'},
-      //     {   path: '/updateCaseApi/project=:project_id/case=:case_id/api=:api_id', component: UpdateCaseApi, name: '修改接口'},
-      //     {   path: '/testReport/project=:project_id', component: TestReport, name: '测试报告'},
-      //   ]
-      // },
-      // {   path: '/projectMember/project=:project_id', component: ProjectMember, name: '成员管理', leaf: true},
-      // {   path: '/projectDynamic/project=:project_id', component: ProjectDynamic, name: '项目动态', leaf: true},
-      // {   path: '/projectReport/project=:project_id', component: ProjectReport, name: '自动化测试报告', leaf: true},
-  //   ]
-  // }
-
-
-
 ];
 
 

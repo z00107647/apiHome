@@ -26,8 +26,8 @@
       </el-table-column>
       <el-table-column prop="status" label="状态" min-width="10%" sortable>
         <template slot-scope="scope">
-          <img v-show="scope.row.status === 1" src="~@/assets/img/icon-yes.svg"/>
-          <img v-show="scope.row.status === 0" src="~@/assets/img/icon-no.svg"/>
+          <img v-show="scope.row.status === 0" src="~@/assets/img/icon-yes.svg"/>
+          <img v-show="scope.row.status === 1" src="~@/assets/img/icon-no.svg"/>
         </template>
       </el-table-column>
       <el-table-column label="操作" min-width="15%">
@@ -80,7 +80,7 @@
       AddOrUpdate
     },
     mounted() {
-      this.dataForm.projectId = this.$route.params.project_id;
+      this.projectId = this.$route.params.project_id;
       this.getDataList();
     },
     methods: {
@@ -159,9 +159,6 @@
         }).catch(() => {})
       },
       handleChangeStatus (row) {
-
-        debugger;
-
         this.$http({
           url: this.$http.adornUrl(`/apiTest/host/changeStatus`),
           method: 'post',
@@ -185,8 +182,7 @@
             this.$message.error(data.msg)
           }
         })
-
-      },
+      }
     }
   }
 </script>

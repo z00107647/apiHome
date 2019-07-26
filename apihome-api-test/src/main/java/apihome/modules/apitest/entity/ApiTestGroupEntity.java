@@ -1,4 +1,4 @@
-package apihome.modules.global.entity;
+package apihome.modules.apitest.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -8,49 +8,41 @@ import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 /**
- * Created by zyanycall@gmail.com on 2019-07-25 20:01.
+ * Created by zyanycall@gmail.com on 2019-07-26 15:20.
  */
 @Data
-@TableName("test_host")
-public class TestHostEntity {
+@TableName("api_test_group")
+public class ApiTestGroupEntity {
 
     /**
-     * host id
+     * 主键id
      */
     @TableId
-    private Long hostId;
+    private Long groupId;
 
     /**
      * 项目id，关联ID
      */
-    @NotBlank(message="关联不能为空")
     private Long projectId;
 
     /**
-     * host名称
+     * 分组名称
      */
-    @NotBlank(message="host名称不能为空")
-    private String hostName;
+    @NotBlank(message="分组名称不能为空")
+    private String groupName;
 
     /**
-     * host ip port
-     */
-    @NotBlank(message="host IP PORT不能为空")
-    private String hostIp;
-
-    /**
-     * host状态  0：正常状态（默认状态）  1：禁止关闭
+     * 状态  0：正常状态（默认状态）  1：禁止关闭
      */
     private Integer status = 0;
 
     /**
-     * host类型  0：全局host  1：接口测试项目使用   2：性能测试项目使用
+     * 分组级别
      */
-    @NotBlank(message="host类型不能为空")
-    private String hostType;
+    private Integer groupLevel;
 
     /**
-     * host信息描述
+     * 描述
      */
     private String remark;
 
@@ -76,12 +68,12 @@ public class TestHostEntity {
     private Date gmtModify;
 
 
-    public Long getHostId() {
-        return hostId;
+    public Long getGroupId() {
+        return groupId;
     }
 
-    public void setHostId(Long hostId) {
-        this.hostId = hostId;
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
     }
 
     public Long getProjectId() {
@@ -92,20 +84,12 @@ public class TestHostEntity {
         this.projectId = projectId;
     }
 
-    public String getHostName() {
-        return hostName;
+    public String getGroupName() {
+        return groupName;
     }
 
-    public void setHostName(String hostName) {
-        this.hostName = hostName;
-    }
-
-    public String getHostIp() {
-        return hostIp;
-    }
-
-    public void setHostIp(String hostIp) {
-        this.hostIp = hostIp;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
     public Integer getStatus() {
@@ -116,12 +100,12 @@ public class TestHostEntity {
         this.status = status;
     }
 
-    public String getHostType() {
-        return hostType;
+    public Integer getGroupLevel() {
+        return groupLevel;
     }
 
-    public void setHostType(String hostType) {
-        this.hostType = hostType;
+    public void setGroupLevel(Integer groupLevel) {
+        this.groupLevel = groupLevel;
     }
 
     public String getRemark() {
