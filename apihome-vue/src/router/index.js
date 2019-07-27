@@ -62,9 +62,9 @@ const apiTestRoutes = [
       { path: '/GlobalHost/project=:project_id', component: _import('project/global/host'), name: 'Host配置', leaf: true},
       { path: '/api/project=:project_id', component: _import('project/api/api'), name: 'API接口', leaf: true, child: true,
         children: [
+          { path: '/fastTest/project=:project_id', component: _import('project/api/fast-test'), name: '快速测试'},
           { path: '/apiList/project=:project_id', component: _import('project/api/api-list'), name: '接口列表'},
           { path: '/apiList/project=:project_id/first=:firstGroup', component: _import('project/api/api-list-group'), name: '分组接口列表'},
-          { path: '/fastTest/project=:project_id', component: _import('project/api/fast-test'), name: '快速测试'},
           { path: '/addApi/project=:project_id', component: _import('project/api/api-add'), name: '新增接口'},
           { path: '/updateApi/project=:project_id/api=:api_id', component: _import('project/api/api-update'), name: '修改'},
           { path: '/detail/project=:project_id/api=:api_id', component: _import('project/api/api-form'), name: '接口',

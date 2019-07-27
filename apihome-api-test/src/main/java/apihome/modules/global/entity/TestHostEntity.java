@@ -23,7 +23,6 @@ public class TestHostEntity {
     /**
      * 项目id，关联ID
      */
-    @NotBlank(message="关联不能为空")
     private Long projectId;
 
     /**

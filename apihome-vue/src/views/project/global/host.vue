@@ -34,7 +34,7 @@
         <template slot-scope="scope">
           <el-button size="small" @click="addOrUpdateHandle(scope.row.hostId)">编辑</el-button>
           <el-button type="danger" size="small" @click="deleteHandle(scope.row.hostId)">删除</el-button>
-          <el-button type="info" size="small" @click="handleChangeStatus(scope.row)">{{scope.row.status===1?'禁用':'启用'}}</el-button>
+          <el-button type="info" size="small" @click="handleChangeStatus(scope.row)">{{scope.row.status === 0 ? '禁用' : '启用'}}</el-button>
         </template>
       </el-table-column>
     </el-table>
