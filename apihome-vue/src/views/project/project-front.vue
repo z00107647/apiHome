@@ -64,7 +64,6 @@
   export default {
     data() {
       return {
-        tabPosition: 'top',
         project_id: '',
         sysName: '接口测试平台',
         collapsed: false,
@@ -76,7 +75,6 @@
       handleselect: function (a, b) {
       },
       onSubmit() {
-        console.log('submit!');
       },
       //退出登录
       logout: function () {
@@ -95,12 +93,12 @@
       },
     },
     created() {
-      let user = sessionStorage.getItem('username');
-      if (user) {
-        name = JSON.parse(user);
-        this.sysUserName = name || '';
-//				this.sysUserAvatar = '../assets/user.png';
-      }
+      // let user = sessionStorage.getItem('username');
+      // if (user) {
+      //   name = JSON.parse(user);
+      //   this.sysUserName = name || '';
+			// 	this.sysUserAvatar = '../assets/user.png';
+      // }
       this.project_id = this.$route.params.project_id;
     }
   }

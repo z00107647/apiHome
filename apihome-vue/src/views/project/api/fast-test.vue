@@ -1,15 +1,15 @@
 <template>
   <section>
     <router-link
-      :to="{ name: '新增接口', params: {project_id: this.$route.params.project_id, formData: this.form, _type: this.radio, _typeData: this.radioType}}"
+      :to="{ name: '新增接口', params: {project_id: this.$route.params.project_id, formData: this.form, _type: this.protocol, _typeData: this.protocol}}"
       style='text-decoration: none;color: aliceblue;'>
       <el-button class="return-list">快速新建API</el-button>
     </router-link>
     <el-form :model="form" ref="form" :rules="formRules">
       <el-col :span="3" class="HOST">
-        <el-form-item prop="url">
-          <el-select v-model="form.url" placeholder="测试环境">
-            <el-option v-for="(item,index) in Host" :key="index+''" :label="item.name" :value="item.host"></el-option>
+        <el-form-item prop="hostIp">
+          <el-select v-model="hostIp" placeholder="测试环境">
+            <el-option v-for="(item,index) in hosts" :key="index+''" :label="item.hostName" :value="item.hostIp"></el-option>
           </el-select>
         </el-form-item>
       </el-col>
@@ -17,23 +17,23 @@
         <el-row :gutter="10">
           <el-col :span="3">
             <el-form-item>
-              <el-select v-model="form.request4" placeholder="请求方式" @change="checkRequest">
-                <el-option v-for="(item,index) in request" :key="index+''" :label="item.label"
+              <el-select v-model="method" placeholder="请求方式" @change="checkRequest">
+                <el-option v-for="(item,index) in methodSelector" :key="index+''" :label="item.label"
                            :value="item.value"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="3">
             <el-form-item>
-              <el-select v-model="form.Http4" placeholder="HTTP协议">
-                <el-option v-for="(item,index) in Http" :key="index+''" :label="item.label"
+              <el-select v-model="protocol" placeholder="HTTP协议">
+                <el-option v-for="(item,index) in protocolSelector" :key="index+''" :label="item.label"
                            :value="item.value"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span='16'>
             <el-form-item prop="addr">
-              <el-input v-model.trim="form.addr" placeholder="Enter request URL" auto-complete></el-input>
+              <el-input v-model.trim="addr" placeholder="Enter request URL" auto-complete></el-input>
             </el-form-item>
           </el-col>
           <el-col :span='2'>
@@ -42,11 +42,8 @@
         </el-row>
       </div>
       <el-row :span="24">
-
         <api-header v-if="true" ref="apiHeader" @refreshHeaderData="getHeaderData"></api-header>
-
-        <api-body v-if="true" ref="apiBody" @refreshBodyData="getBodyData"></api-body>
-
+        <api-body v-if="bodyShow" ref="apiBody" @refreshBodyData="getBodyData"></api-body>
         <api-response v-if="true" ref="apiResponse" @refreshResponseData="getResponseData"></api-response>
       </el-row>
     </el-form>
@@ -64,58 +61,46 @@
     components: {ApiHeader, ApiBody, ApiResponse},
     data() {
       return {
-        request: [{value: 'get', label: 'GET'}, {value: 'post', label: 'POST'},
-          {value: 'put', label: 'PUT'}, {value: 'delete', label: 'DELETE'}],
-        Http: [{value: 'http', label: 'HTTP'}, {value: 'https', label: 'HTTPS'}],
-        ParameterType: true,
-        radio: "form-data",
+        methodSelector: [{value: 'GET', label: 'GET'}, {value: 'POST', label: 'POST'},
+          {value: 'PUT', label: 'PUT'}, {value: 'DELETE', label: 'DELETE'}],
+        method: 'GET',
+        protocolSelector: [{value: 'HTTP', label: 'HTTP'}, {value: 'HTTPS', label: 'HTTPS'}],
+        protocol: 'HTTP',
+        hostIp: "",
+        addr: "",
         loadingSend: false,
-        header4: "",
-        radioType: "",
-        result: true,
-        activeNames: ['1', '2', '3', '4'],
-        Host: [],
-        id: "",
-        request3: true,
-        form: {
-          url: "",
-          request4: 'POST',
-          Http4: 'HTTP',
-          addr: '',
-          head: [{name: "", value: ""},
-            {name: "", value: ""}],
-          parameterRaw: "",
-          parameter: [{name: "", value: "", required: "", restrict: "", description: ""},
-            {name: "", value: "", required: "", restrict: "", description: ""}],
-          parameterType: "",
-          statusCode: "",
-          resultData: "",
-          resultHead: "",
+        hosts: [],
+        headers: [],
+        bodyShow: true,
+        body: {
+          bodyRaw: "",
+          bodyForm: [{name: "", value: "", required: "", restrict: "", description: ""}],
+          bodyMode: "formData"
         },
+        form: {},
         formRules: {
-          addr: [
-            {required: true, message: '请输入地址', trigger: 'blur'},
+          url: [
+            {required: true, message: '请输入地址url', trigger: 'blur'},
           ]
-        },
-        headers: "",
-        parameters: "",
-        resultShow: true,
-        format: false,
+        }
       }
     },
     methods: {
-      getHeaderData() {
+      getHeaderData(headerData) {
+        this.headers = headerData;
       },
-      getBodyData() {
+      getBodyData(bodyData) {
+        this.body = bodyData;
       },
       getResponseData() {
       },
+      // 如果是GET 或者  DELETE 请求，折叠掉body下拉框
       checkRequest() {
-        let request = this.form.request4;
-        if (request === "GET" || request === "DELETE") {
-          this.request3 = false
+        let requestMethod = this.method;
+        if (requestMethod === "GET" || requestMethod === "DELETE") {
+          this.bodyShow = false
         } else {
-          this.request3 = true
+          this.bodyShow = true
         }
       },
       getHost() {
@@ -124,15 +109,15 @@
           method: 'get',
           params: this.$http.adornParams({
             // 'page': this.pageIndex,
-            'limit': 100, //分页查询，取前1000条
+            'limit': 100, //分页查询，取前100条
             'projectId': this.$route.params.project_id
           })
         }).then(({data}) => {
           if (data && data.code === 0) {
             data.page.list.forEach((item) => {
               if (item.status === 0) {
-                let hostSingle = {name: item.hostName, host: item.hostIp};
-                this.Host.push(hostSingle)
+                let hostSingle = {hostName: item.hostName, hostIp: item.hostIp};
+                this.hosts.push(hostSingle)
               }
             });
           } else {
@@ -143,105 +128,147 @@
           }
         });
       },
-      // selsChangeHead: function (sels) {
-      //   this.headers = sels
-      // },
+      isJsonString(str) {
+        try {
+          if (typeof JSON.parse(str) === "object") {
+            return true;
+          }
+        } catch (e) {
+        }
+        return false;
+      },
       fastTest: function () {
+
+        this.loadingSend = true;
 
         debugger;
 
-        let host = this.form.addr;
-        if (host.indexOf("http://") === 0) {
-          this.form.addr = host.slice(7)
-        }
-        if (host.indexOf("https://") === 0) {
-          this.form.addr = host.slice(8)
-        }
-        console.log(this.form.addr);
-        this.loadingSend = true;
-        let self = this;
-        let _parameter = {};
-        let headers = {};
-        self.form.statusCode = '';
-        self.form.resultData = '';
-        self.form.resultHead = '';
-        for (let i = 0; i < self.form.head.length; i++) {
-          var a = self.form.head[i]["name"];
-          if (a) {
-            headers[a] = self.form.head[i]["value"]
-          }
-        }
-        let url = self.form.Http4 + "://" + this.form.addr;
-        let _type = self.radio;
-        if (_type === 'form-data') {
-          if (self.radioType) {
-            for (let i = 0; i < self.parameters.length; i++) {
-              var a = self.parameters[i]["name"];
-              if (a) {
-                _parameter[a] = self.parameters[i]["value"];
-              }
-            }
-            _parameter = JSON.stringify(_parameter)
-          } else {
-            _parameter = self.form.parameter
-          }
-        } else {
-          // POST(url, self.form.parameterRaw, headers)
-          _parameter = self.form.parameterRaw;
-        }
-        if (self.form.parameterRaw && _type === "raw") {
-          if (!self.isJsonString(self.form.parameterRaw)) {
-            self.$message({
-              message: '源数据格式错误',
-              center: true,
-              type: 'error'
+        this.$http({
+          url: this.$http.adornUrl(`/apiTest/request/fastTest`),
+          method: 'post',
+          data: this.$http.adornData({
+            'protocol' : this.protocol,
+            'method' : this.method,
+            'hostIp': this.hostIp,
+            'url': this.addr,
+            'headers': this.headers,
+            'bodyMode': this.body.bodyMode,
+            'bodyDataForm': this.body.bodyForm,
+            'bodyDataRaw': this.body.bodyRaw
+          })
+        }).then(({data}) => {
+          if (data && data.code === 0) {
+            this.$message({
+              message: '操作成功',
+              type: 'success',
+              duration: 500,
+              // onClose: () => {
+              //   this.visible = false;
+              //   this.$emit('refreshDataList')
+              // }
             })
           } else {
-            // $.ajax({
-            //   type: self.form.request4,
-            //   url: url,
-            //   async: true,
-            //   data: _parameter,
-            //   headers: headers,
-            //   timeout: 5000,
-            //   dataType: 'jsonp',
-            //   success: function (data, status, jqXHR) {
-            //     console.log(data)
-            //     self.loadingSend = false;
-            //     self.form.statusCode = jqXHR.status;
-            //     self.form.resultData = data;
-            //     self.form.resultHead = jqXHR.getAllResponseHeaders()
-            //   },
-            //   error: function (jqXHR, error, errorThrown) {
-            //     self.loadingSend = false;
-            //     self.form.statusCode = jqXHR.status;
-            //     self.form.resultData = jqXHR.responseJSON;
-            //     self.form.resultHead = jqXHR.getAllResponseHeaders()
-            //   }
-            // })
+            this.$message.error(data.msg)
           }
-        } else {
-          // $.ajax({
-          //   type: self.form.request4,
-          //   url: url,
-          //   async: true,
-          //   data: _parameter,
-          //   headers: headers,
-          //   timeout: 5000,
-          //   success: function (data, status, jqXHR) {
-          //     self.loadingSend = false;
-          //     self.form.statusCode = jqXHR.status;
-          //     self.form.resultData = data;
-          //     self.form.resultHead = jqXHR.getAllResponseHeaders()
-          //   },
-          //   error: function (jqXHR, error, errorThrown) {
-          //     self.loadingSend = false;
-          //     self.form.statusCode = jqXHR.status;
-          //     self.form.resultData = jqXHR.responseJSON;
-          //     self.form.resultHead = jqXHR.getAllResponseHeaders()
-          //   }
-          // })
-        }
+        });
+
+
+
+
+
+
+        // let host = this.form.addr;
+        // if (host.indexOf("http://") === 0) {
+        //   this.form.addr = host.slice(7)
+        // }
+        // if (host.indexOf("https://") === 0) {
+        //   this.form.addr = host.slice(8)
+        // }
+        // console.log(this.form.addr);
+        // this.loadingSend = true;
+        // let self = this;
+        // let _parameter = {};
+        // let headers = {};
+        // self.form.statusCode = '';
+        // self.form.resultData = '';
+        // self.form.resultHead = '';
+        // for (let i = 0; i < self.form.head.length; i++) {
+        //   var a = self.form.head[i]["name"];
+        //   if (a) {
+        //     headers[a] = self.form.head[i]["value"]
+        //   }
+        // }
+        // let url = self.form.Http4 + "://" + this.form.addr;
+        // let _type = self.radio;
+        // if (_type === 'form-data') {
+        //   if (self.radioType) {
+        //     for (let i = 0; i < self.parameters.length; i++) {
+        //       var a = self.parameters[i]["name"];
+        //       if (a) {
+        //         _parameter[a] = self.parameters[i]["value"];
+        //       }
+        //     }
+        //     _parameter = JSON.stringify(_parameter)
+        //   } else {
+        //     _parameter = self.form.body
+        //   }
+        // } else {
+        //   // POST(url, self.form.parameterRaw, headers)
+        //   _parameter = self.form.bodyRaw;
+        // }
+        // if (self.form.bodyRaw && _type === "raw") {
+        //   if (!self.isJsonString(self.form.bodyRaw)) {
+        //     self.$message({
+        //       message: '源数据格式错误',
+        //       center: true,
+        //       type: 'error'
+        //     })
+        //   } else {
+        //     // $.ajax({
+        //     //   type: self.form.request4,
+        //     //   url: url,
+        //     //   async: true,
+        //     //   data: _parameter,
+        //     //   headers: headers,
+        //     //   timeout: 5000,
+        //     //   dataType: 'jsonp',
+        //     //   success: function (data, status, jqXHR) {
+        //     //     console.log(data)
+        //     //     self.loadingSend = false;
+        //     //     self.form.statusCode = jqXHR.status;
+        //     //     self.form.resultData = data;
+        //     //     self.form.resultHead = jqXHR.getAllResponseHeaders()
+        //     //   },
+        //     //   error: function (jqXHR, error, errorThrown) {
+        //     //     self.loadingSend = false;
+        //     //     self.form.statusCode = jqXHR.status;
+        //     //     self.form.resultData = jqXHR.responseJSON;
+        //     //     self.form.resultHead = jqXHR.getAllResponseHeaders()
+        //     //   }
+        //     // })
+        //   }
+        // } else {
+        //   // $.ajax({
+        //   //   type: self.form.request4,
+        //   //   url: url,
+        //   //   async: true,
+        //   //   data: _parameter,
+        //   //   headers: headers,
+        //   //   timeout: 5000,
+        //   //   success: function (data, status, jqXHR) {
+        //   //     self.loadingSend = false;
+        //   //     self.form.statusCode = jqXHR.status;
+        //   //     self.form.resultData = data;
+        //   //     self.form.resultHead = jqXHR.getAllResponseHeaders()
+        //   //   },
+        //   //   error: function (jqXHR, error, errorThrown) {
+        //   //     self.loadingSend = false;
+        //   //     self.form.statusCode = jqXHR.status;
+        //   //     self.form.resultData = jqXHR.responseJSON;
+        //   //     self.form.resultHead = jqXHR.getAllResponseHeaders()
+        //   //   }
+        //   // })
+        // }
       }
     },
     mounted() {

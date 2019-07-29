@@ -50,3 +50,28 @@ CREATE TABLE `api_test_group` (
   PRIMARY KEY (`group_id`),
   UNIQUE INDEX (`project_id`,`group_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='接口测试分组表';
+
+-- 接口测试请求表，每个用例会有多个请求，这个请求表会比较大，是接口测试的核心表。
+CREATE TABLE `api_test_request` (
+  `request_id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `project_id` bigint unsigned NOT NULL COMMENT '所关联的项目',
+  `host_id` bigint unsigned COMMENT '所关联的Host地址',
+  `host_ip` varchar(50) COMMENT 'host地址，可以包含:port',
+  `request_name` varchar(100) NOT NULL COMMENT '接口名称',
+  `method` varchar(10) NOT NULL COMMENT '请求方法，如GET,POST等',
+  `url` varchar(2000) NOT NULL COMMENT '接口url',
+  `protocol` varchar(20) NOT NULL COMMENT '接口协议名称，未来可以有版本号',
+  `headers` varchar(2000) COMMENT 'headers集合，使用JSON格式保存',
+  `query_params` varchar(2000) COMMENT '对于get请求的查询参数集合，使用JSON格式保存',
+  `body_mode` varchar(10) COMMENT 'body体的格式类型，可以有JSON类型，raw类型等，需要根据类型做处理',
+  `body_data` varchar(3000) COMMENT 'body体，使用JSON格式保存',
+  `validate` varchar(3000) COMMENT 'body体，使用JSON格式保存',
+  `status` tinyint NOT NULL DEFAULT 0 COMMENT '状态  0：正常   1：禁用',
+  `remark` varchar(1024) COMMENT '接口描述',
+  `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建格林尼治时间',
+  `create_by` bigint(20) unsigned COMMENT '提交用户id',
+  `gmt_modify` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改格林尼治时间',
+  `modify_by` bigint(20) unsigned COMMENT '修改用户id',
+  PRIMARY KEY (`request_id`),
+  UNIQUE INDEX (`project_id`,`request_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='接口测试请求表';

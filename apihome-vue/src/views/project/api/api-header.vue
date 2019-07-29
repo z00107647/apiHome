@@ -7,14 +7,16 @@
         <el-table-column prop="name" label="标签" min-width="20%" sortable>
           <template slot-scope="scope">
             <el-select placeholder="head标签" filterable v-model="scope.row.name">
-              <el-option v-for="(item,index) in header" :key="index+''" :label="item.label" :value="item.value"></el-option>
+              <el-option v-for="(item,index) in header" :key="index+''" :label="item.label"
+                         :value="item.value"></el-option>
             </el-select>
-            <el-input class="selectInput" v-model.trim="scope.row.name" :value="scope.row.name" placeholder="请输入内容"></el-input>
+            <el-input class="selectInput" v-model.trim="scope.row.name" :value="scope.row.name"
+                      placeholder="请输入内容" @input="changeValue"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="value" label="内容" min-width="40%" sortable>
           <template slot-scope="scope">
-            <el-input v-model.trim="scope.row.value" :value="scope.row.value" placeholder="请输入内容"></el-input>
+            <el-input v-model.trim="scope.row.value" :value="scope.row.value" placeholder="请输入内容" @input="changeValue"></el-input>
           </template>
         </el-table-column>
         <el-table-column label="操作" min-width="7%">
@@ -24,7 +26,7 @@
         </el-table-column>
         <el-table-column label="" min-width="10%">
           <template slot-scope="scope">
-            <el-button v-if="scope.$index===(form.head.length-1)" size="mini" class="el-icon-plus"
+            <el-button v-if="scope.$index === (form.head.length-1)" size="mini" class="el-icon-plus"
                        @click="addHead"></el-button>
           </template>
         </el-table-column>
@@ -36,7 +38,7 @@
 
 <script>
   export default {
-    data () {
+    data() {
       return {
         // 用于对应的name名称来展开，默认都闭合
         activeNames: [],
@@ -87,14 +89,19 @@
         let headers = {name: "", value: ""};
         this.form.head.push(headers);
         let rows = [this.form.head[this.form.head.length - 1]];
-        this.toggleHeadSelection(rows)
+        this.toggleHeadSelection(rows);
+        // this.$emit('refreshHeaderData', this.form.head)
       },
       delHead(index) {
         if (this.form.head.length !== 1) {
           this.form.head.splice(index, 1)
         }
+        // this.$emit('refreshHeaderData', this.form.head)
       },
       handleChange(val) {
+      },
+      changeValue(){
+        this.$emit('refreshHeaderData', this.form.head)
       }
     },
     mounted() {

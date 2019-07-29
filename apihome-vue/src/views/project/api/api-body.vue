@@ -4,28 +4,30 @@
       <div style="margin: 5px">
         <el-row :span="24">
           <el-col :span="4">
-            <el-radio v-model="radio" label="form-data">表单(form-data)</el-radio>
+            <el-radio v-model="body.bodyMode" label="formData">表单(form-data)</el-radio>
           </el-col>
           <el-col :span="4">
-            <el-radio v-model="radio" label="raw" v-if="request3">源数据(raw)</el-radio>
+            <el-radio v-model="body.bodyMode" label="raw" v-if="rawShow">源数据(raw)</el-radio>
           </el-col>
-          <el-col v-show="request3" :span="16">
-            <el-checkbox v-model="radioType" label="3" v-show="ParameterType">表单转源数据</el-checkbox>
+          <el-col v-show="rawShow" :span="16">
+            <el-checkbox v-model="radioType" label="3" v-show="bodyType">表单转源数据</el-checkbox>
           </el-col>
         </el-row>
       </div>
-      <el-table ref="multipleParameterTable" :data="form.parameter" highlight-current-row
-                :class="ParameterType? 'parameter-a': 'parameter-b'" @selection-change="selsChangeParameter">
+      <el-table ref="multipleParameterTable" :data="body.bodyForm" highlight-current-row
+                :class="bodyType? 'body-a': 'body-b'" @selection-change="selsChangeParameter">
         <el-table-column type="selection" min-width="5%" label="头部">
         </el-table-column>
         <el-table-column prop="name" label="参数名" min-width="40%" sortable>
           <template slot-scope="scope">
-            <el-input v-model.trim="scope.row.name" :value="scope.row.name" placeholder="请输入参数值"></el-input>
+            <el-input v-model.trim="scope.row.name" :value="scope.row.name" placeholder="请输入参数值"
+                      @input="changeValue"></el-input>
           </template>
         </el-table-column>
         <el-table-column prop="value" label="参数值" min-width="80%" sortable>
           <template slot-scope="scope">
-            <el-input v-model.trim="scope.row.value" :value="scope.row.value" placeholder="请输入参数值"></el-input>
+            <el-input v-model.trim="scope.row.value" :value="scope.row.value" placeholder="请输入参数值"
+                      @input="changeValue"></el-input>
           </template>
         </el-table-column>
         <el-table-column label="操作" min-width="15%">
@@ -36,15 +38,15 @@
         </el-table-column>
         <el-table-column label="" min-width="10%">
           <template slot-scope="scope">
-            <el-button v-if="scope.$index===(form.parameter.length-1)" size="mini" class="el-icon-plus"
+            <el-button v-if="scope.$index===(body.bodyForm.length-1)" size="mini" class="el-icon-plus"
                        @click="addParameter"></el-button>
           </template>
         </el-table-column>
         <el-table-column label="" min-width="18%"></el-table-column>
       </el-table>
       <template>
-        <el-input :class="ParameterType? 'parameter-b': 'parameter-a'" type="textarea" :rows="5"
-                  placeholder="请输入内容" v-model.trim="form.parameterRaw"></el-input>
+        <el-input :class="bodyType? 'body-b': 'body-a'" type="textarea" :rows="5"
+                  placeholder="请输入内容" v-model.trim="body.bodyRaw" @input="changeValue"></el-input>
       </template>
     </el-collapse-item>
   </el-collapse>
@@ -52,33 +54,22 @@
 
 <script>
   export default {
-    data () {
+    data() {
       return {
         activeNames: [],
-        ParameterType: true,
-        radio: "form-data",
+        bodyType: true,
         loadingSend: false,
-        header4: "",
         radioType: "",
         result: true,
-        request3: true,
-        form: {
-          parameterRaw: "",
-          parameter: [{name: "", value: "", required: "", restrict: "", description: ""}],
-          parameterType: "",
-        },
+        rawShow: true,
+        body: {
+          bodyRaw: "",
+          bodyForm: [{name: "", value: "", required: "", restrict: "", description: ""}],
+          bodyMode: "formData"
+        }
       }
     },
     methods: {
-      isJsonString(str) {
-        try {
-          if (typeof JSON.parse(str) === "object") {
-            return true;
-          }
-        } catch (e) {
-        }
-        return false;
-      },
       toggleParameterSelection(rows) {
         rows.forEach(row => {
           this.$refs.multipleParameterTable.toggleRowSelection(row, true);
@@ -88,24 +79,24 @@
         this.parameters = sels
       },
       addParameter() {
-        let headers = {name: "", value: "", required: "True", restrict: "", description: ""};
-        this.form.parameter.push(headers);
-        let rows = [this.form.parameter[this.form.parameter.length - 1]];
+        let bodyLine = {name: "", value: "", required: "True", restrict: "", description: ""};
+        this.body.bodyForm.push(bodyLine);
+        let rows = [this.body.bodyForm[this.body.bodyForm.length - 1]];
         this.toggleParameterSelection(rows)
       },
       delParameter(index) {
-        if (this.form.parameter.length !== 1) {
-          this.form.parameter.splice(index, 1)
+        if (this.body.bodyForm.length !== 1) {
+          this.body.bodyForm.splice(index, 1)
         }
       },
       changeParameterType() {
-        if (this.radio === 'form-data') {
-          this.ParameterType = !this.ParameterType
-        } else {
-          this.ParameterType = !this.ParameterType
-        }
+        this.bodyType = !this.bodyType;
+        this.body.bodyMode = this.radio;
       },
       handleChange(val) {
+      },
+      changeValue(){
+        this.$emit('refreshBodyData', this.body)
       }
     },
     watch: {
@@ -114,18 +105,19 @@
       }
     },
     mounted() {
-      this.toggleParameterSelection(this.form.parameter);
+      this.toggleParameterSelection(this.body.bodyForm);
     }
   }
 </script>
 <style lang="scss" scoped>
-  .parameter-a {
+  .body-a {
     display: block;
   }
 
-  .parameter-b {
+  .body-b {
     display: none;
   }
+
   .raw {
     border: 1px solid #e6e6e6;
     margin-bottom: 10px;
